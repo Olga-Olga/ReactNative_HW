@@ -8,6 +8,10 @@ import {
   ScrollView,
   Button,
   Linking,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 
 // import styledC from "styled-components";
@@ -21,7 +25,7 @@ const LoginScreen = () => {
 
   const handleRegister = () => {
     console.log("User data:", user);
-    // perform further actions here, like sending the data to a server.
+    Alert.alert("You tapped the button!");
   };
 
   const handlePress = () => {
@@ -30,43 +34,49 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Увійти</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Адрес електронної пошти"
-        keyboardType="email-address"
-        onChangeText={(text) => handleInputChange("Email", text)}
-      />
-      <TouchableOpacity>
-        <TextInput
-          style={styles.input}
-          value={user.Password}
-          placeholder="Пароль"
-          secureTextEntry={true}
-          onChangeText={(text) => handleInputChange("Password", text)}
-        />
-        <Text
-          style={{
-            position: "absolute",
-            right: 16,
-            top: 15,
-          }}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Увійти</Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
         >
-          Показати
+          <TextInput
+            style={styles.input}
+            placeholder="Адрес електронної пошти"
+            keyboardType="email-address"
+            onChangeText={(text) => handleInputChange("Email", text)}
+          />
+          <TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              value={user.Password}
+              placeholder="Пароль"
+              secureTextEntry={true}
+              onChangeText={(text) => handleInputChange("Password", text)}
+            />
+            <Text
+              style={{
+                position: "absolute",
+                right: 16,
+                top: 15,
+              }}
+            >
+              Показати
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+        <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
+          <Text style={styles.btn}>Увійти</Text>
+        </TouchableOpacity>
+        <Text style={{ textAlign: "center" }}>
+          Немає акаунту? {/* <TouchableOpacity onPress={handlePress}> */}
+          <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+            Зареєструватися
+          </Text>
+          {/* </TouchableOpacity> */}
         </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
-        <Text style={styles.btn}>Увійти</Text>
-      </TouchableOpacity>
-      <Text style={{ textAlign: "center" }}>
-        Немає акаунту? {/* <TouchableOpacity onPress={handlePress}> */}
-        <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-          Зареєструватися
-        </Text>
-        {/* </TouchableOpacity> */}
-      </Text>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

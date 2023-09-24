@@ -25,8 +25,8 @@ export default function App() {
           zIndex: 1,
         }}
       />
-      {/* <LoginScreen /> */}
-      <RegistrationScreen />
+      <LoginScreen />
+      {/* <RegistrationScreen /> */}
       {/* <PostsScreen /> */}
     </View>
   );
