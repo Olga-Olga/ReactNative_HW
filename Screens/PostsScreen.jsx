@@ -6,7 +6,7 @@ export class PostsScreen extends Component {
     return (
       <View style={styles.circle}>
         {/* <TouchableOpacity style={styles.icon}> */}
-        <Text style={styles.iconText}>✕</Text>
+        <Text style={styles.iconText}>POST SCREEN</Text>
         {/* </TouchableOpacity> */}
       </View>
     );

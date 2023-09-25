@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
@@ -9,9 +10,11 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Button,
 } from "react-native";
 
 const RegistrationScreen = () => {
+  const navigation = useNavigation();
   const [user, setUser] = useState({ Name: "", Email: "", Password: "" });
 
   const handleInputChange = (fieldName, text) => {
@@ -58,6 +61,12 @@ const RegistrationScreen = () => {
           <Text style={styles.btn}>Зареєструватися</Text>
         </TouchableOpacity>
         <Text style={{ textAlign: "center" }}>Вже є акаунт? Увійти</Text>
+        <Button
+          title="Go to Login"
+          onPress={() =>
+            navigation.navigate("Login", { sessionId: 45, userId: "22e24" })
+          }
+        />
       </View>
     </TouchableWithoutFeedback>
   );

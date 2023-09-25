@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
@@ -12,11 +13,17 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Alert,
+  FlatList,
 } from "react-native";
 
 // import styledC from "styled-components";
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
+  const {
+    params: { userId },
+  } = useRoute();
+
   const [user, setUser] = useState({ Email: "", Password: "" });
 
   const handleInputChange = (fieldName, text) => {
@@ -36,6 +43,7 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
+        <FlatList />
         <Text style={styles.title}>Увійти</Text>
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -73,6 +81,10 @@ const LoginScreen = () => {
           <Text style={{ color: "blue", textDecorationLine: "underline" }}>
             Зареєструватися
           </Text>
+          <Button
+            title="Go to Home"
+            onPress={() => navigation.navigate("Home")}
+          />
           {/* </TouchableOpacity> */}
         </Text>
       </View>
