@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Button,
+  Image,
 } from "react-native";
 
 const RegistrationScreen = () => {
@@ -23,50 +24,64 @@ const RegistrationScreen = () => {
 
   const handleRegister = () => {
     console.log("User data:", user);
+    navigation.navigate("Home");
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <View style={styles.avatar}>
-          <View style={styles.addIcon}>
-            <Text style={styles.addIconText}>✕</Text>
-          </View>
-        </View>
-        <Text style={styles.title}>Реєстрація</Text>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-        >
-          <TextInput
-            style={styles.input}
-            placeholder="Логін"
-            onChangeText={(text) => handleInputChange("Name", text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Адрес електронної пошти"
-            keyboardType="email-address"
-            onChangeText={(text) => handleInputChange("Email", text)}
-          />
-
-          <TextInput
-            style={styles.input}
-            value={user.Password}
-            placeholder="Пароль"
-            secureTextEntry={true}
-            onChangeText={(text) => handleInputChange("Password", text)}
-          />
-        </KeyboardAvoidingView>
-        <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
-          <Text style={styles.btn}>Зареєструватися</Text>
-        </TouchableOpacity>
-        <Text style={{ textAlign: "center" }}>Вже є акаунт? Увійти</Text>
-        <Button
-          title="Go to Login"
-          onPress={() =>
-            navigation.navigate("Login", { sessionId: 45, userId: "22e24" })
-          }
+      <View>
+        <Image
+          resizeMode="cover"
+          source={require("../assets/PhotoBG.png")}
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+          }}
         />
+        <View style={styles.container}>
+          <View style={styles.avatar}>
+            <View style={styles.addIcon}>
+              <Text style={styles.addIconText}>✕</Text>
+            </View>
+          </View>
+          <Text style={styles.title}>Реєстрація</Text>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          >
+            <TextInput
+              style={styles.input}
+              placeholder="Логін"
+              onChangeText={(text) => handleInputChange("Name", text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Адрес електронної пошти"
+              keyboardType="email-address"
+              onChangeText={(text) => handleInputChange("Email", text)}
+            />
+
+            <TextInput
+              style={styles.input}
+              value={user.Password}
+              placeholder="Пароль"
+              secureTextEntry={true}
+              onChangeText={(text) => handleInputChange("Password", text)}
+            />
+          </KeyboardAvoidingView>
+          <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
+            <Text style={styles.btn}>Зареєструватися</Text>
+          </TouchableOpacity>
+          <Text style={{ textAlign: "center" }}>
+            Вже є акаунт?{" "}
+            <Text
+              onPress={() => navigation.navigate("Login")}
+              style={{ color: "blue", textDecorationLine: "underline" }}
+            >
+              Увійти
+            </Text>
+          </Text>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );

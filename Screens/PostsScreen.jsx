@@ -1,17 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { Component } from "react";
+import React from "react";
 
-export class PostsScreen extends Component {
-  render() {
-    return (
-      <View style={styles.circle}>
-        {/* <TouchableOpacity style={styles.icon}> */}
-        <Text style={styles.iconText}>POST SCREEN</Text>
-        {/* </TouchableOpacity> */}
-      </View>
-    );
-  }
-}
+const PostsScreen = () => {
+  return (
+    <View style={styles.circle}>
+      {/* <TouchableOpacity style={styles.icon}> */}
+      <Text style={styles.iconText}>POST SCREEN</Text>
+      {/* </TouchableOpacity> */}
+    </View>
+  );
+};
 
 export default PostsScreen;
 

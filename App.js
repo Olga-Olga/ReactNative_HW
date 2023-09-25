@@ -21,7 +21,7 @@ const MainStack = createStackNavigator(); // вказує на групу нав
 export default function App() {
   return (
     <NavigationContainer>
-      <View style={styles.container1}>
+      {/* <View style={styles.container1}>
         <Image
           source={require("./assets/PhotoBG.png")}
           style={{
@@ -30,43 +30,38 @@ export default function App() {
             position: "absolute",
             zIndex: 1,
           }}
-        />
-        {/* <LoginScreen /> */}
-        {/* <RegistrationScreen /> */}
-        {/* <PostsScreen /> */}
+        /> */}
+      {/* <LoginScreen /> */}
+      {/* <RegistrationScreen /> */}
+      {/* <PostsScreen /> */}
 
-        <MainStack.Navigator>
-          {/* Аналог Routes */}
-          <MainStack.Screen
-            name="Registration"
-            component={RegistrationScreen}
-          />
-          {/* Аналог Route */}
-          <MainStack.Screen name="Login" component={LoginScreen} />
-          <MainStack.Screen
-            name="Home"
-            component={PostsScreen}
-            options={{
-              title: "Home screen",
-              headerStyle: {
-                backgroundColor: "#f4511e",
-              },
-              headerTintColor: "#fff",
-              headerTitleStyle: {
-                fontWeight: "bold",
-                fontSize: 20,
-              },
-              headerRight: () => (
-                <Button
-                  onPress={() => alert("This is a button!")}
-                  title="Press me"
-                  color="#fff"
-                />
-              ),
-            }}
-          />
-        </MainStack.Navigator>
-      </View>
+      <MainStack.Navigator>
+        <MainStack.Screen name="Registration" component={RegistrationScreen} />
+        <MainStack.Screen name="Login" component={LoginScreen} />
+        <MainStack.Screen
+          name="Home"
+          component={PostsScreen}
+          options={{
+            title: "Home screen",
+            headerStyle: {
+              backgroundColor: "#f4511e",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 20,
+            },
+            headerRight: () => (
+              <Button
+                onPress={() => alert("This is a button!")}
+                title="Press me"
+                color="#fff"
+              />
+            ),
+          }}
+        />
+      </MainStack.Navigator>
+      {/* </View> */}
     </NavigationContainer>
   );
 }

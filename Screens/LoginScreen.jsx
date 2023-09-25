@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
@@ -14,15 +14,16 @@ import {
   KeyboardAvoidingView,
   Alert,
   FlatList,
+  Image,
 } from "react-native";
 
 // import styledC from "styled-components";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const {
-    params: { userId },
-  } = useRoute();
+  // const {
+  //   params: { userId },
+  // } = useRoute();
 
   const [user, setUser] = useState({ Email: "", Password: "" });
 
@@ -42,51 +43,60 @@ const LoginScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <FlatList />
-        <Text style={styles.title}>Увійти</Text>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-        >
-          <TextInput
-            style={styles.input}
-            placeholder="Адрес електронної пошти"
-            keyboardType="email-address"
-            onChangeText={(text) => handleInputChange("Email", text)}
-          />
-          <TouchableOpacity>
+      <View>
+        <Image
+          resizeMode="cover"
+          source={require("../assets/PhotoBG.png")}
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+          }}
+        />
+        <View style={styles.container}>
+          <FlatList />
+          <Text style={styles.title}>Увійти</Text>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          >
             <TextInput
               style={styles.input}
-              value={user.Password}
-              placeholder="Пароль"
-              secureTextEntry={true}
-              onChangeText={(text) => handleInputChange("Password", text)}
+              placeholder="Адрес електронної пошти"
+              keyboardType="email-address"
+              onChangeText={(text) => handleInputChange("Email", text)}
             />
-            <Text
-              style={{
-                position: "absolute",
-                right: 16,
-                top: 15,
-              }}
-            >
-              Показати
-            </Text>
+            <TouchableOpacity>
+              <TextInput
+                style={styles.input}
+                value={user.Password}
+                placeholder="Пароль"
+                secureTextEntry={true}
+                onChangeText={(text) => handleInputChange("Password", text)}
+              />
+              <Text
+                style={{
+                  position: "absolute",
+                  right: 16,
+                  top: 15,
+                }}
+              >
+                Показати
+              </Text>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+          <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
+            <Text style={styles.btn}>Увійти</Text>
           </TouchableOpacity>
-        </KeyboardAvoidingView>
-        <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
-          <Text style={styles.btn}>Увійти</Text>
-        </TouchableOpacity>
-        <Text style={{ textAlign: "center" }}>
-          Немає акаунту? {/* <TouchableOpacity onPress={handlePress}> */}
-          <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-            Зареєструватися
+          <Text style={{ textAlign: "center" }}>
+            Немає акаунту?{" "}
+            <Text
+              onPress={() => navigation.navigate("Registration")}
+              style={{ color: "blue", textDecorationLine: "underline" }}
+            >
+              Зареєструватися
+            </Text>
           </Text>
-          <Button
-            title="Go to Home"
-            onPress={() => navigation.navigate("Home")}
-          />
-          {/* </TouchableOpacity> */}
-        </Text>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
