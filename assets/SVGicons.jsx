@@ -3,31 +3,31 @@ import { SvgXml } from "react-native-svg";
 
 export const SVGicons = ({ name }) => {
   switch (name) {
-    // case "iconLogout": //для зміни кольору використовувати
-    //   return (
-    //     <svg id="iconLogout" viewBox="0 0 24 24" fill="none">
-    //       <path
-    //         d="M10 22H5C3.89543 22 3 21.1046 3 20V4C3 2.89543 3.89543 2 5 2H10"
-    //         stroke="#BDBDBD"
-    //         strokeLinecap="round"
-    //         strokeLinejoin="round"
-    //       />
-    //       <path
-    //         d="M17 16L21 12L17 8"
-    //         stroke="#BDBDBD"
-    //         strokeLinecap="round"
-    //         strokeLinejoin="round"
-    //       />
-    //       <path
-    //         d="M21 12H9"
-    //         stroke="#BDBDBD"
-    //         strokeLinecap="round"
-    //         strokeLinejoin="round"
-    //       />
-    //     </svg>
-    //   );
-    case "email":
-      const svgCode = `
+    case "iconLogout": //для зміни кольору використовувати
+      return (
+        <svg id="iconLogout" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M10 22H5C3.89543 22 3 21.1046 3 20V4C3 2.89543 3.89543 2 5 2H10"
+            stroke="#BDBDBD"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M17 16L21 12L17 8"
+            stroke="#BDBDBD"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M21 12H9"
+            stroke="#BDBDBD"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "svgCode":
+      return `
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
   <rect width="24" height="24" fill="white"/>
   <path fill-rule="evenodd" clip-rule="evenodd" d="M3 3H10V10H3V3Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -36,7 +36,7 @@ export const SVGicons = ({ name }) => {
   <path fill-rule="evenodd" clip-rule="evenodd" d="M3 14H10V21H3V14Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
-      return <SvgXml xml={svgCode} width={24} height={24} />;
+    // <SvgXml xml={svgCode} width={24} height={24} />;
 
     // case "password": //для зміни кольору використовувати fill
     //   return (

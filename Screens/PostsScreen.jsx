@@ -8,35 +8,10 @@ import {
 } from "react-native";
 import React from "react";
 import { SVGicons } from "../assets/SVGicons";
-// import { SvgXml } from "react-native-svg-xml";
 import { SvgXml } from "react-native-svg";
-// import React from "react";
-
-const cross = `<svg xmlns="http://www.w3.org/2000/svg" width="70" height="40" viewBox="0 0 70 40" fill="none">
-<g clip-path="url(#clip0_12_109)">
-<rect width="70" height="40" rx="20" fill="#FF6C00"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M35.5 13.5H34.5V19.5H28.5V20.5H34.5V26.5H35.5V20.5H41.5V19.5H35.5V13.5Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_12_109">
-<rect width="70" height="40" fill="white"/>
-</clipPath>
-</defs>
-</svg>`;
-
-const personIcon = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-<path d="M20 21V19C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19V21" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-`;
+// import LogOut from "../assets/LogOut";
 
 const PostsScreen = (users) => {
-  const handleIconClick = (iconName) => {
-    // Ваш обработчик нажатия на иконку, можете добавить свою логику здесь
-    console.log(`Clicked on ${iconName}`);
-  };
-
   const usersData = [
     {
       id: "1",
@@ -69,30 +44,6 @@ const PostsScreen = (users) => {
         renderItem={renderUserItem}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
-
-      <View style={styles.separator}>{/* Разделительная линия */}</View>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity
-          onPress={() => handleIconClick("svgCode")}
-          style={styles.icon}
-        >
-          {/* <SvgXml xml={svgCode} width={24} height={24} /> */}
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleIconClick("cross")}
-          style={[styles.icon, styles.iconWithGap]}
-        >
-          <Text>
-            <SvgXml xml={<SVGicons name="email" />} width={70} height={40} />
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleIconClick("personIcon")}
-          style={styles.icon}
-        >
-          <SvgXml xml={personIcon} width={24} height={24} />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };

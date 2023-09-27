@@ -24,7 +24,7 @@ const RegistrationScreen = () => {
 
   const handleRegister = () => {
     console.log("User data:", user);
-    navigation.navigate("Home");
+    navigation.navigate("HomeStack");
   };
 
   return (
