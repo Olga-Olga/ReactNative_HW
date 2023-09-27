@@ -21,44 +21,48 @@ const MainStack = createStackNavigator(); // вказує на групу нав
 export default function App() {
   return (
     <NavigationContainer>
-      {/* <View style={styles.container1}>
-        <Image
-          source={require("./assets/PhotoBG.png")}
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            zIndex: 1,
-          }}
-        /> */}
-      {/* <LoginScreen /> */}
-      {/* <RegistrationScreen /> */}
-      {/* <PostsScreen /> */}
-
       <MainStack.Navigator>
         <MainStack.Screen name="Registration" component={RegistrationScreen} />
         <MainStack.Screen name="Login" component={LoginScreen} />
-        <MainStack.Screen
+
+        {/* <MainStack.Screen
           name="Home"
           component={PostsScreen}
           options={{
-            title: "Home screen",
-            headerStyle: {
-              backgroundColor: "#f4511e",
-            },
-            headerTintColor: "#fff",
-            headerTitleStyle: {
-              fontWeight: "bold",
-              fontSize: 20,
-            },
+            title: "Публікації",
+            alignItems: "center",
+            // headerStyle: {
+            //   backgroundColor: "#f4511e",
+            // },
+            // headerTintColor: "#fff",
+            // headerTitleStyle: {
+            //   fontWeight: "bold",
+            //   fontSize: 20,
+            // },
             headerRight: () => (
               <Button
-                onPress={() => alert("This is a button!")}
-                title="Press me"
+                onPress={() => navigation.navigate("Login")}
+                title="Exit"
                 color="#fff"
               />
             ),
           }}
+        /> */}
+
+        <MainStack.Screen
+          name="Home"
+          component={PostsScreen}
+          options={() => ({
+            title: "Публікації",
+            alignItems: "center",
+            headerRight: () => (
+              <Button
+                onPress={() => alert("You log out!!!")}
+                title="Exit"
+                color="#fff"
+              />
+            ),
+          })}
         />
       </MainStack.Navigator>
       {/* </View> */}
