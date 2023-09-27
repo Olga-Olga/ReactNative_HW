@@ -38,7 +38,7 @@ const personIcon = `
 </svg>
 `;
 
-const PostsScreen = (users) => {
+const CreatePostsScreen = (users) => {
   const handleIconClick = (iconName) => {
     // Ваш обработчик нажатия на иконку, можете добавить свою логику здесь
     console.log(`Clicked on ${iconName}`);
@@ -75,31 +75,12 @@ const PostsScreen = (users) => {
       />
 
       <View style={styles.separator}>{/* Разделительная линия */}</View>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity
-          onPress={() => handleIconClick("svgCode")}
-          style={styles.icon}
-        >
-          <SvgXml xml={svgCode} width={24} height={24} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleIconClick("cross")}
-          style={[styles.icon, styles.iconWithGap]}
-        >
-          <SvgXml xml={cross} width={70} height={40} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleIconClick("personIcon")}
-          style={styles.icon}
-        >
-          <SvgXml xml={personIcon} width={24} height={24} />
-        </TouchableOpacity>
-      </View>
+      <View style={styles.iconContainer}></View>
     </View>
   );
 };
 
-export default PostsScreen;
+export default CreatePostsScreen;
 
 const styles = StyleSheet.create({
   container: {

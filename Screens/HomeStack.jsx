@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import PostsScreen from "./PostsScreen";
 import ProfileScreen from "./ProfileScreen";
+import { Feather } from "@expo/vector-icons";
+import CreatePostsScreen from "./CreatePostsScreen";
 
 // function Settings() {
 //   return (
@@ -32,23 +34,37 @@ const HomeStack = () => {
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
+        tabBarActiveTintColor: "#FF6C00",
+        tabBarInactiveTintColor: "#212121CC",
+        tabBarShowLabel: false,
+        tabBarStyle: { height: 83 },
+
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Profile") {
-            iconName = focused
-              ? "ios-information-circle"
-              : "ios-information-circle-outline";
-          } else if (route.name === "Settings") {
-            iconName = focused ? "ios-list-box" : "ios-list";
+          if (route.name === "PostsScreen") {
+            iconName = focused ? "grid" : "grid";
+          } else if (route.name === "CreatePostsScreen") {
+            iconName = focused ? "plus" : "plus";
+          } else if (route.name === "ProfileScreen") {
+            iconName = focused ? "user" : "user";
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
+
+          return (
+            <Feather
+              name={iconName}
+              size={size}
+              color={focused ? "white" : color}
+              style={{
+                borderRadius: 100,
+                paddingHorizontal: 28,
+                paddingVertical: 13,
+                backgroundColor: focused ? color : "transparent",
+              }}
+            />
+          );
         },
       })}
-      //   tabBarOptions={{
-      //     activeTintColor: "tomato",
-      //     inactiveTintColor: "gray",
-      //   }}
     >
       <Tabs.Screen
         name="ProfileScreen"
@@ -66,8 +82,11 @@ const HomeStack = () => {
 
       <Tabs.Screen
         name="CreatePostsScreen"
-        component={View}
-        listeners={() => ({ tabPress: (e) => pressHandler(e) })}
+        component={CreatePostsScreen}
+        // options={{
+        //   headerTitle: () => <Text />,
+        // }}
+        // listeners={() => ({ tabPress: (e) => pressHandler(e) })}
       />
 
       <Tabs.Screen
