@@ -19,29 +19,31 @@ const PostsScreen = (users) => {
       icon: "https://icons.iconarchive.com/icons/iconarchive/incognito-animals/512/Bear-Avatar-icon.png",
       email: "olga@gmail.com",
     },
-    // Добавьте других пользователей в массив
+    {
+      id: "2",
+      name: "Mykola",
+      icon: "https://icons.iconarchive.com/icons/iconarchive/incognito-animals/512/Bear-Avatar-icon.png",
+      email: "olga@gmail.com",
+    },
   ];
-  const renderUserItem = ({ item }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => handleIconClick(item.name)}
-        style={styles.userItem}
-      >
-        <Image source={{ uri: item.icon }} style={styles.iconImage} />
-        <View style={styles.userInfo}>
-          <Text style={styles.emailText}>{item.email}</Text>
-          <Text style={styles.nameText}>{item.name}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <View style={styles.container}>
       <FlatList
         data={usersData}
         keyExtractor={(item) => item.id}
-        renderItem={renderUserItem}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => handleIconClick(item.name)}
+            style={styles.userItem}
+          >
+            <Image source={{ uri: item.icon }} style={styles.iconImage} />
+            <View style={styles.userInfo}>
+              <Text style={styles.emailText}>{item.email}</Text>
+              <Text style={styles.nameText}>{item.name}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     </View>
@@ -53,37 +55,40 @@ export default PostsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1, // Занимает всю доступную высоту экрана
-    justifyContent: "flex-end", // Выравнивание контейнера по нижней части экрана
-    alignItems: "center", // Выравнивание элементов по центру горизонтально
+    // justifyContent: "flex-end", // Выравнивание контейнера по нижней части экрана
+    // alignItems: "flex-start", // Выравнивание элементов по центру горизонтально
   },
   iconContainer: {
-    flexDirection: "row", // Расположение элементов в линию
-    alignItems: "center", // Выравнивание элементов по центру вертикально
-    padding: 16, // Добавляем отступы по бокам
+    // flexDirection: "row", // Расположение элементов в линию
+    // alignItems: "center", // Выравнивание элементов по центру вертикально
+    // padding: 16, // Добавляем отступы по бокам
   },
   icon: {
-    marginRight: 39,
+    // marginRight: 39,
+    // padding: 20,
   },
   iconWithGap: {
-    marginRight: 39,
+    // marginRight: 39,
   },
   separator: {
     width: "100%",
-    height: 0.5,
-    backgroundColor: "grey", // Цвет линии
+    height: 1,
+    backgroundColor: "green", // Цвет линии
   },
   userItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
+    padding: 26,
+    backgroundColor: "grey",
   },
   iconImage: {
-    width: 24,
-    height: 24,
-    marginRight: 16,
+    width: 36,
+    height: 36,
+    // marginRight: 16,
   },
   userInfo: {
-    flex: 1,
+    padding: 20,
+    // flex: 1,
   },
   emailText: {
     fontSize: 16,
