@@ -1,31 +1,17 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
 import PostsScreen from "./PostsScreen";
 import ProfileScreen from "./ProfileScreen";
 import { Feather } from "@expo/vector-icons";
 import CreatePostsScreen from "./CreatePostsScreen";
-
-// function Settings() {
-//   return (
-//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//       <Text>Settings!</Text>
-//     </View>
-//   );
-// }
-
-// function Profile() {
-//   return (
-//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//       <Text>Profile!</Text>
-//     </View>
-//   );
-// }
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Feather";
 
 const Tabs = createBottomTabNavigator();
 
 const HomeStack = () => {
+  const navigation = useNavigation();
   const pressHandler = (e) => {
     e.preventDefault();
     console.log("Enter");
@@ -41,13 +27,12 @@ const HomeStack = () => {
 
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-
           if (route.name === "PostsScreen") {
-            iconName = focused ? "grid" : "grid";
+            iconName = "grid";
           } else if (route.name === "CreatePostsScreen") {
-            iconName = focused ? "plus" : "plus";
+            iconName = "plus";
           } else if (route.name === "ProfileScreen") {
-            iconName = focused ? "user" : "user";
+            iconName = "user";
           }
 
           return (
@@ -67,31 +52,24 @@ const HomeStack = () => {
       })}
     >
       <Tabs.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
+        name="PostsScreen"
+        component={PostsScreen}
         options={{
           headerRight: () => (
-            <Button
-              onPress={() => alert("You log out!!!")}
-              title="Exit"
-              color="#fff"
+            <Icon
+              name="log-out"
+              size={30}
+              padding="10"
+              color="grey"
+              onPress={() => navigation.navigate("Login")}
             />
           ),
         }}
       />
-
+      <Tabs.Screen name="CreatePostsScreen" component={CreatePostsScreen} />
       <Tabs.Screen
-        name="CreatePostsScreen"
-        component={CreatePostsScreen}
-        // options={{
-        //   headerTitle: () => <Text />,
-        // }}
-        // listeners={() => ({ tabPress: (e) => pressHandler(e) })}
-      />
-
-      <Tabs.Screen
-        name="PostsScreen"
-        component={PostsScreen}
+        name="ProfileScreen"
+        component={ProfileScreen}
         options={{
           headerRight: () => (
             <Button

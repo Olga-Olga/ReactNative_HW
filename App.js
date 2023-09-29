@@ -25,31 +25,6 @@ export default function App() {
       <MainStack.Navigator screenOptions={{ headerShown: false }}>
         <MainStack.Screen name="Registration" component={RegistrationScreen} />
         <MainStack.Screen name="Login" component={LoginScreen} />
-
-        {/* <MainStack.Screen
-          name="Home"
-          component={PostsScreen}
-          options={{
-            title: "Публікації",
-            alignItems: "center",
-            // headerStyle: {
-            //   backgroundColor: "#f4511e",
-            // },
-            // headerTintColor: "#fff",
-            // headerTitleStyle: {
-            //   fontWeight: "bold",
-            //   fontSize: 20,
-            // },
-            headerRight: () => (
-              <Button
-                onPress={() => navigation.navigate("Login")}
-                title="Exit"
-                color="#fff"
-              />
-            ),
-          }}
-        /> */}
-
         <MainStack.Screen
           name="HomeStack"
           component={HomeStack}
@@ -60,8 +35,6 @@ export default function App() {
           })}
         />
       </MainStack.Navigator>
-
-      {/* </View> */}
     </NavigationContainer>
   );
 }

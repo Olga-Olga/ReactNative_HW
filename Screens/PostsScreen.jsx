@@ -7,9 +7,6 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import { SVGicons } from "../assets/SVGicons";
-import { SvgXml } from "react-native-svg";
-// import LogOut from "../assets/LogOut";
 
 const PostsScreen = (users) => {
   const usersData = [
