@@ -16,13 +16,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import HomeStack from "./Screens/HomeStack";
+import MapScreen from "./Screens/MapScreen";
 
 const MainStack = createStackNavigator(); // вказує на групу навігаторів
 
 export default function App() {
   return (
     <NavigationContainer>
-      <MainStack.Navigator screenOptions={{ headerShown: false }}>
+      <MainStack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={MapScreen}
+      >
         <MainStack.Screen name="Registration" component={RegistrationScreen} />
         <MainStack.Screen name="Login" component={LoginScreen} />
         <MainStack.Screen

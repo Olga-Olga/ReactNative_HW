@@ -1,82 +1,98 @@
 import {
-  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Image,
+  Button,
+  ScrollView,
 } from "react-native";
-import React from "react";
-// import { SvgXml } from "react-native-svg-xml";
-import { SvgXml } from "react-native-svg";
+import { SvgCamera } from "../assets/SvgCamera";
+import React, { useState, useEffect, useRef } from "react";
+import * as MediaLibrary from "expo-media-library";
+// import * as Location from "expo-location";
+import { Camera, RNCamera } from "expo-camera";
 
-const svgCode = `
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <rect width="24" height="24" fill="white"/>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M3 3H10V10H3V3Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M14 3H21V10H14V3Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M14 14H21V21H14V14Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M3 14H10V21H3V14Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-`;
+const CreatePostsScreen = () => {
+  const cameraRef = useRef(null);
+  // const [cameraRef, setcameraRef] = useState(null);
+  // const [hasPermission, setHasPermission] = useState(null);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  console.log("p", permission);
+  const [photoLink, setphotoLink] = useState("");
+  const [location, setLocation] = useState(null);
 
-const cross = `<svg xmlns="http://www.w3.org/2000/svg" width="70" height="40" viewBox="0 0 70 40" fill="none">
-<g clip-path="url(#clip0_12_109)">
-<rect width="70" height="40" rx="20" fill="#FF6C00"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M35.5 13.5H34.5V19.5H28.5V20.5H34.5V26.5H35.5V20.5H41.5V19.5H35.5V13.5Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_12_109">
-<rect width="70" height="40" fill="white"/>
-</clipPath>
-</defs>
-</svg>`;
+  useEffect(() => {
+    requestPermission();
+    // (async () => {
+    //   const { status } = await Camera.requestCameraPermissionsAsync();
+    //   await MediaLibrary.requestPermissionsAsync();
+    //   setHasPermission(status === "granted");
+    // })();
+    // (async () => {
+    //   let { status } = await Location.requestForegroundPermissionsAsync();
+    //   if (status !== "granted") {
+    //     console.log("Permission to access location was denied");
+    //   }
+    //   let location = await Location.getCurrentPositionAsync({});
+    //   const coords = {
+    //     latitude: location.coords.latitude,
+    //     longitude: location.coords.longitude,
+    //     latitudeDelta: 0.0922,
+    //     longitudeDelta: 0.0421,
+    //   };
+    //   setLocation(coords);
+    // })();
+  }, []);
 
-const personIcon = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-<path d="M20 21V19C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19V21" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#212121" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-`;
+  if (!permission) {
+    return <View />;
+  }
+  if (!permission.granted) {
+    return <Text>No access to camera</Text>;
+  }
 
-const CreatePostsScreen = (users) => {
-  const handleIconClick = (iconName) => {
-    // Ваш обработчик нажатия на иконку, можете добавить свою логику здесь
-    console.log(`Clicked on ${iconName}`);
-  };
+  const makePhoto = async () => {
+    if (cameraRef.current) {
+      const options = {
+        skipProcessing: true,
+      };
 
-  const usersData = {
-    name: "Olga",
-    icon: "https://icons.iconarchive.com/icons/iconarchive/incognito-animals/512/Bear-Avatar-icon.png",
-    email: "olga@gmail.com",
-  };
-
-  const renderUserItem = ({ item }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => handleIconClick(item.name)}
-        style={styles.userItem}
-      >
-        <Image source={{ uri: item.icon }} style={styles.iconImage} />
-        <View style={styles.userInfo}>
-          <Text style={styles.emailText}>{item.email}</Text>
-          <Text style={styles.nameText}>{item.name}</Text>
-        </View>
-      </TouchableOpacity>
-    );
+      try {
+        const data = await cameraRef.current.takePictureAsync(options);
+        console.log("Picture data:", data);
+        console.log("Picture data:", data.uri);
+        setphotoLink(data.uri);
+      } catch (error) {
+        console.error("Error while taking a picture:", error);
+      }
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={usersData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderUserItem}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+    <ScrollView>
+      <View>
+        <Camera ref={cameraRef} style={{ flex: 1 }}>
+          <View>
+            <Image souce={{ uri: photoLink }} />
+          </View>
+          <TouchableOpacity
+            onPress={makePhoto}
+            style={styles.container}
+          ></TouchableOpacity>
+          <SvgCamera />
+        </Camera>
+        <Text style={{ fontSize: 20, color: "red" }}>Завантажити фото</Text>
+        <Text>Назва</Text>
+        <Text>Місцевість</Text>
+      </View>
+      <Button
+        onPress={() => alert("Опублікувати")}
+        title="Опублікувати"
+        color="#fff"
       />
-
-      <View style={styles.separator}>{/* Разделительная линия */}</View>
-      <View style={styles.iconContainer}></View>
-    </View>
+      <Text>TrachBin</Text>
+    </ScrollView>
   );
 };
 
@@ -84,10 +100,17 @@ export default CreatePostsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Занимает всю доступную высоту экрана
-    justifyContent: "flex-end", // Выравнивание контейнера по нижней части экрана
-    alignItems: "center", // Выравнивание элементов по центру горизонтально
+    width: 343,
+    height: 240,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    marginHorizontal: "auto",
+    marginVertical: 0,
+    alignSelf: "center",
+    alignItems: "center",
   },
+
   iconContainer: {
     flexDirection: "row", // Расположение элементов в линию
     alignItems: "center", // Выравнивание элементов по центру вертикально
@@ -125,3 +148,280 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+// import { View, TouchableOpacity, Image, TextInput, Text } from "react-native";
+// import { StyleSheet } from "react-native";
+// import { useEffect, useState } from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import { useNavigation } from "@react-navigation/native";
+// import * as ImagePicker from "expo-image-picker";
+// import * as MediaLibrary from "expo-media-library";
+// import * as Location from "expo-location";
+// import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+// import { Feather, FontAwesome } from "@expo/vector-icons";
+
+// // import { selectUser } from "../redux/auth/authSelectors";
+// // import { addPost } from "../redux/posts/postsOperations";
+// // import { createPostsStyles } from "./CreatePostsScreenStyles";
+
+// let selectUrer;
+// let addPost;
+
+// const defaultMapLocation = {
+//   isLoading: false,
+//   latitude: null,
+//   longitude: null,
+// };
+
+// export default function CreatePostScreen() {
+//   const [isCameraPermissionDenied, setCameraDenied] = useState(false);
+//   const [image, setImage] = useState(null);
+//   const [title, setTitle] = useState("");
+//   const [place, setPlace] = useState("");
+//   const [mapLocation, setMapLocation] = useState({ ...defaultMapLocation });
+//   const isDataFullFilled = image && title && place && !mapLocation.isLoading;
+
+//   const { uid } = useSelector(1);
+//   const { navigate } = useNavigation();
+//   const dispatch = useDispatch();
+
+//   async function makePhoto() {
+//     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
+//     if (!granted) {
+//       setCameraDenied(true);
+//       return alert("Permission to camera access was denied");
+//     }
+
+//     await MediaLibrary.requestPermissionsAsync();
+//     const { canceled, assets } = await ImagePicker.launchCameraAsync({
+//       quality: 1,
+//       allowsEditing: true,
+//       allowsMultipleSelection: false,
+//     });
+//     if (!canceled) {
+//       await MediaLibrary.createAssetAsync(assets[0].uri);
+//       setImage(assets[0].uri);
+//       setCameraDenied(false);
+//     }
+//   }
+
+//   function removePhoto() {
+//     setImage(null);
+//   }
+
+//   async function getMapLocation() {
+//     const { status } = await Location.requestForegroundPermissionsAsync();
+//     if (status !== "granted") {
+//       return setMapLocation({ ...defaultMapLocation });
+//     }
+
+//     setMapLocation((state) => ({ ...state, isLoading: true }));
+//     const {
+//       coords: { latitude, longitude },
+//     } = await Location.getCurrentPositionAsync({
+//       accuracy: Location.LocationAccuracy.Low,
+//     });
+//     setMapLocation((state) => ({
+//       ...state,
+//       isLoading: false,
+//       latitude,
+//       longitude,
+//     }));
+//   }
+
+//   function handleSubmit() {
+//     dispatch(
+//       addPost({
+//         authorID: uid,
+//         image,
+//         title: title.trim(),
+//         place: place.trim(),
+//         mapLocation: {
+//           latitude: mapLocation.latitude,
+//           longitude: mapLocation.longitude,
+//         },
+//         comments: [],
+//         likes: 0,
+//       })
+//     );
+//     resetData();
+//     navigate("PostsScreen");
+//   }
+
+//   function resetData() {
+//     setImage(null);
+//     setTitle("");
+//     setPlace("");
+//     setMapLocation({ ...defaultMapLocation });
+//   }
+
+//   return (
+//     <KeyboardAwareScrollView style={createPostsStyles.container}>
+//       <TouchableOpacity
+//         style={createPostsStyles.imgWrapper}
+//         onPress={image ? removePhoto : makePhoto}
+//       >
+//         {image && (
+//           <Image style={createPostsStyles.imgSize} source={{ uri: image }} />
+//         )}
+//         <View
+//           style={[
+//             createPostsStyles.cameraBtn,
+//             image && createPostsStyles.transparent,
+//           ]}
+//         >
+//           <FontAwesome
+//             name="camera"
+//             size={24}
+//             color={image ? "#fff" : "#7365C3"}
+//           />
+//         </View>
+//       </TouchableOpacity>
+//       {isCameraPermissionDenied ? (
+//         <Text style={createPostsStyles.warning}>
+//           To create a new post, please allow access to your camera.
+//         </Text>
+//       ) : (
+//         <Text style={createPostsStyles.cameraText}>
+//           {image ? "Редагувати фото" : "Завантажте фото"}
+//         </Text>
+//       )}
+
+//       <View style={createPostsStyles.inputsList}>
+//         <View style={createPostsStyles.inputWrapper}>
+//           <TextInput
+//             placeholder="Назва..."
+//             style={createPostsStyles.input}
+//             value={title}
+//             onChangeText={(value) => setTitle(value)}
+//             placeholderTextColor="#BDBDBD"
+//           />
+//         </View>
+//         <View style={createPostsStyles.inputWrapper}>
+//           <Feather name="map-pin" size={24} color="#7365C3" />
+//           <TextInput
+//             placeholder="Місцевість..."
+//             style={createPostsStyles.input}
+//             value={mapLocation.isLoading ? "Location is updating . . ." : place}
+//             onChangeText={(value) => setPlace(value)}
+//             onBlur={() => place && getMapLocation()}
+//             placeholderTextColor="#BDBDBD"
+//           />
+//         </View>
+//       </View>
+
+//       <TouchableOpacity
+//         style={[
+//           createPostsStyles.submitBtn,
+//           isDataFullFilled && createPostsStyles.activeBtn,
+//         ]}
+//         disabled={!isDataFullFilled}
+//         onPress={handleSubmit}
+//       >
+//         <Text
+//           style={[
+//             createPostsStyles.submitBtnText,
+//             isDataFullFilled && createPostsStyles.activeText,
+//           ]}
+//         >
+//           Опубліковати
+//         </Text>
+//       </TouchableOpacity>
+
+//       <TouchableOpacity style={createPostsStyles.resetBtn} onPress={resetData}>
+//         <Feather name="trash-2" size={24} color="#7365C3" />
+//       </TouchableOpacity>
+//     </KeyboardAwareScrollView>
+//   );
+// }
+
+// export const createPostsStyles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     paddingLeft: 16,
+//     paddingRight: 16,
+//     paddingTop: 32,
+//     backgroundColor: "#fff",
+//   },
+//   imgWrapper: {
+//     height: 240,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#F6F6F6",
+//     borderColor: "#E8E8E8",
+//     borderWidth: 1,
+//     borderRadius: 8,
+//   },
+//   imgSize: {
+//     width: "100%",
+//     height: "100%",
+//     borderRadius: 8,
+//   },
+//   cameraBtn: {
+//     position: "absolute",
+//     width: 60,
+//     height: 60,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     backgroundColor: "#fff",
+//     borderRadius: 50,
+//   },
+//   transparent: {
+//     backgroundColor: "rgba(255, 255, 255, 0.30)",
+//   },
+//   cameraText: {
+//     marginTop: 8,
+//     color: "#BDBDBD",
+//     fontSize: 16,
+//   },
+//   warning: {
+//     color: "red",
+//     fontSize: 18,
+//     textAlign: "center",
+//   },
+//   inputsList: {
+//     rowGap: 16,
+//     marginVertical: 32,
+//   },
+//   inputWrapper: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     columnGap: 4,
+//     borderBottomWidth: 1,
+//     borderBottomColor: "#E8E8E8",
+//   },
+//   input: {
+//     width: "100%",
+//     height: 50,
+//     fontSize: 16,
+//     color: "#212121",
+//   },
+//   submitBtn: {
+//     marginBottom: 120,
+//     alignItems: "center",
+//     padding: 16,
+//     fontSize: 16,
+//     backgroundColor: "#F6F6F6",
+//     borderRadius: 100,
+//   },
+//   activeBtn: {
+//     backgroundColor: "#7365C3",
+//   },
+//   submitBtnText: {
+//     color: "#BDBDBD",
+//     fontSize: 16,
+//   },
+//   activeText: {
+//     color: "#ffffff",
+//   },
+//   resetBtn: {
+//     width: 70,
+//     height: 40,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     marginLeft: "auto",
+//     marginRight: "auto",
+//     backgroundColor: "#F6F6F6",
+//     borderRadius: 20,
+//   },
+// });
