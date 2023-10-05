@@ -1,49 +1,50 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  register,
-  logIn,
-  logOut,
-  changeAvatar,
-  deleteAvatar,
-} from "./authOperations";
-
-const defaultUserData = {
-  uid: "",
-  email: "",
-  name: "",
-  avatarURL: "",
+import { logInThunk, registerThunk } from "./operetions";
+// email: "",
+// password: "",
+// login: "",
+const initialState = {
+  user: {},
+  error: "",
+  token: "",
 };
-
-const authSlice = createSlice({
-  name: "auth",
-  initialState: {
-    email: "",
-    name: "",
-    password: "",
-    isLoggedIn: false,
-    user: { ...defaultUserData },
+export const authSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    // register: (state, { payload }) => {
+    //   state.user = payload;
+    // },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(register.fulfilled, (state, { payload }) => {
-        state.isLoggedIn = true;
+      .addCase(registerThunk.fulfilled, (state, { payload }) => {
         state.user = payload;
+        // state.token = payload.token;
+        state.isAuth = true;
+        state.isLoading = false;
       })
-      .addCase(logIn.fulfilled, (state, { payload }) => {
-        state.isLoggedIn = true;
+      .addCase(registerThunk.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(registerThunk.rejected, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(logInThunk.fulfilled, (state, { payload }) => {
         state.user = payload;
+        // state.token = payload.token;
+        state.isLoading = false;
+        state.isAuth = true;
       })
-      .addCase(logOut.fulfilled, (state) => {
-        state.isLoggedIn = false;
-        state.user = { ...defaultUserData };
+      .addCase(logInThunk.pending, (state, action) => {
+        state.isLoading = true;
       })
-      .addCase(changeAvatar.fulfilled, (state, { payload }) => {
-        state.user.avatarURL = payload;
-      })
-      .addCase(deleteAvatar.fulfilled, (state) => {
-        state.user.avatarURL = null;
+      .addCase(logInThunk.rejected, (state, action) => {
+        state.isLoading = false;
       });
+   
   },
 });
 
-export const authReducer = authSlice.reducer;
+export const userReducer = authSlice.reducer;
+

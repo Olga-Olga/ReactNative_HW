@@ -6,14 +6,19 @@ import {
   Image,
   Button,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { SvgCamera } from "../assets/SvgCamera";
 import React, { useState, useEffect, useRef } from "react";
 import * as MediaLibrary from "expo-media-library";
 // import * as Location from "expo-location";
 import { Camera, RNCamera } from "expo-camera";
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
+
+import { db, storage } from "../config";
 
 const CreatePostsScreen = () => {
+  const [text, setText] = useState("");
   const cameraRef = useRef(null);
   // const [cameraRef, setcameraRef] = useState(null);
   // const [hasPermission, setHasPermission] = useState(null);
@@ -60,13 +65,60 @@ const CreatePostsScreen = () => {
 
       try {
         const data = await cameraRef.current.takePictureAsync(options);
-        console.log("Picture data:", data);
-        console.log("Picture data:", data.uri);
+        // console.log("Picture data:", data);
+        // console.log("Picture data:", data.uri);
         setphotoLink(data.uri);
       } catch (error) {
-        console.error("Error while taking a picture:", error);
+        // console.error("Error while taking a picture:", error);
       }
     }
+  };
+
+  const uploadImg = async () => {
+    try {
+      const response = await fetch(photoLink);
+      const file = await response.blob();
+      const imgRef = ref(storage, `photos/${file._data.blobId}`);
+      await uploadBytes(imgRef, file).then((snapshot) => {
+        console.log("Uploaded a blob or file!", snapshot);
+      });
+      const photoUrl = await getDownloadURL(imgRef);
+      console.log(photoUrl);
+      return photoUrl;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const publicPost = async () => {
+    try {
+      const img = await uploadImg();
+      console.log(img);
+      // const newPost = {
+      //   location: location,
+      //   title: photoName,
+      //   locationName: photoLocetion,
+      //   imgRef: img || "",
+      //   coments: [],
+      // };
+      // dispatch(addPostThunk(newPost));
+      // navigation.navigate("PostsScreen");
+      // // ====================
+      // setPhotoName("");
+      // setPhotoLocetion("");
+      // setIsFormValid(false);
+      // setHasPermission(null);
+      // setCameraRef(null);
+      // setPhoto("");
+      // setLocation(null);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      throw e;
+    }
+  };
+
+  const handleInputChange = (text) => {
+    setText(text);
   };
 
   return (
@@ -76,21 +128,21 @@ const CreatePostsScreen = () => {
           <View>
             <Image souce={{ uri: photoLink }} />
           </View>
-          <TouchableOpacity
-            onPress={makePhoto}
-            style={styles.container}
-          ></TouchableOpacity>
-          <SvgCamera />
+          <TouchableOpacity onPress={makePhoto} style={styles.container}>
+            <SvgCamera />
+          </TouchableOpacity>
         </Camera>
-        <Text style={{ fontSize: 20, color: "red" }}>Завантажити фото</Text>
-        <Text>Назва</Text>
-        <Text>Місцевість</Text>
+        <Text style={styles.lable}>Завантажити фото</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Назва..." // Placeholder text
+          value={text}
+          onChangeText={(text) => handleInputChange(text)}
+        />
+
+        {/* <Text>Місцевість</Text> */}
       </View>
-      <Button
-        onPress={() => alert("Опублікувати")}
-        title="Опублікувати"
-        color="#fff"
-      />
+      <Button onPress={publicPost} title="Опублікувати" style={styles.btn} />
       <Text>TrachBin</Text>
     </ScrollView>
   );
@@ -145,6 +197,32 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   nameText: {
+    fontSize: 16,
+  },
+  btn: {
+    flexDirection: "column",
+    alignItems: "center",
+    width: 343,
+    padding: 16,
+    paddingHorizontal: 32,
+    paddingVertical: 32,
+    marginVertical: 12,
+    borderRadius: 100, // Додано borderRadius
+    backgroundColor: "#F6F6F6", // Додано background
+  },
+  lable: {
+    color: "#BDBDBD", // Change the color here
+    fontFamily: "Roboto", // Change the font family here
+    fontSize: 16, // Change the font size here
+    fontStyle: "normal", // Change the font style here ('normal', 'italic', etc.)
+    fontWeight: "400", // Change the font weight here ('400', 'bold', etc.)
+    lineHeight: 24, // Change the line height here},
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#CCCCCC",
+    borderRadius: 5,
+    padding: 10,
     fontSize: 16,
   },
 });

@@ -1,124 +1,60 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  ref,
-  uploadBytes,
-  deleteObject,
-  getDownloadURL,
-} from "firebase/storage";
-import {
   createUserWithEmailAndPassword,
-  updateProfile,
   signInWithEmailAndPassword,
-  signOut,
+  onAuthStateChanged,
+  updateProfile,
 } from "firebase/auth";
-import { auth, storage } from "../../config";
+import { auth } from "../../config";
 
-const register = createAsyncThunk(
+export const registerThunk = createAsyncThunk(
   "auth/register",
-  async (userData, { rejectWithValue }) => {
-    const { name, email, password, avatarLocalPath } = userData;
-
+  async (credentials, thunkAPI) => {
+    const { login } = credentials;
+    const email = credentials.mail;
+    const password = credentials.pass;
     try {
-      const { user } = await createUserWithEmailAndPassword(
+      const userData = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-
-      if (avatarLocalPath) {
-        const avatar = await fetch(avatarLocalPath);
-        const blobAvatar = await avatar.blob();
-        const blobAvatarLocalPath = "avatars/" + blobAvatar._data.blobId;
-
-        await uploadBytes(ref(storage, blobAvatarLocalPath), blobAvatar);
-        const avatarURL = await getDownloadURL(
-          ref(storage, blobAvatarLocalPath)
-        );
-        await updateProfile(user, {
-          displayName: name,
-          photoURL: avatarURL,
-        });
-        return { uid: user.uid, email, name, avatarURL };
-      } else {
-        await updateProfile(user, {
-          displayName: name,
-        });
-        return { uid: user.uid, email, name, avatarURL: "" };
-      }
-    } catch (error) {
-      alert(`RegisterError, ${error.message}`);
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-const logIn = createAsyncThunk(
-  "auth/logIn",
-  async (credentials, { rejectWithValue }) => {
-    const { email, password } = credentials;
-    try {
-      const {
-        user: { uid, displayName, photoURL },
-      } = await signInWithEmailAndPassword(auth, email, password);
-
-      return {
-        uid,
-        email,
-        name: displayName,
-        avatarURL: photoURL,
-      };
-    } catch (error) {
-      alert(`LoginError, ${error.message}`);
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-const logOut = createAsyncThunk(
-  "auth/logOut",
-  async (_, { rejectWithValue }) => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      alert(`LogoutError, ${error.message}`);
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-const changeAvatar = createAsyncThunk(
-  "auth/changeAvatar",
-  async (avatarLocalPath, { rejectWithValue }) => {
-    try {
-      const avatar = await fetch(avatarLocalPath);
-      const blobAvatar = await avatar.blob();
-      const blobAvatarLocalPath = "avatars/" + blobAvatar._data.blobId;
-
-      await uploadBytes(ref(storage, blobAvatarLocalPath), blobAvatar);
-      const avatarURL = await getDownloadURL(ref(storage, blobAvatarLocalPath));
       await updateProfile(auth.currentUser, {
-        photoURL: avatarURL,
+        displayName: login,
       });
 
-      return avatarURL;
+      return {
+        login: login,
+        email: userData.user.email,
+        userId: userData.user.uid,
+      };
+      // return userData.user;
     } catch (error) {
-      alert(`changeAvatar, ${error.message}`);
-      return rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
-
-const deleteAvatar = createAsyncThunk(
-  "auth/deleteAvatar",
-  async (_, { rejectWithValue }) => {
+export const logInThunk = createAsyncThunk(
+  "auth/logIn",
+  async (credentials, thunkAPI) => {
+    const email = credentials.mail;
+    const password = credentials.pass;
     try {
-      const { photoURL } = auth.currentUser;
-      await deleteObject(ref(storage, photoURL));
+      const userData = await signInWithEmailAndPassword(auth, email, password);
+      return {
+        login: userData.user.displayName,
+        email: userData.user.email,
+        userId: userData.user.uid,
+      };
+      // return userData.user;
     } catch (error) {
-      alert(`deleteAvatar, ${error.message}`);
-      return rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-export { register, logIn, logOut, changeAvatar, deleteAvatar };
+const authStateChanged = async (onChange = () => {}) => {
+  onAuthStateChanged((user) => {
+    onChange(user);
+  });
+};

@@ -16,14 +16,16 @@ import {
   FlatList,
   Image,
 } from "react-native";
-
-// import styledC from "styled-components";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../config";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  // const {
-  //   params: { userId },
-  // } = useRoute();
 
   const [user, setUser] = useState({ Email: "", Password: "" });
 
@@ -31,9 +33,25 @@ const LoginScreen = () => {
     setUser({ ...user, [fieldName]: text });
   };
 
-  const handleRegister = () => {
-    console.log("User data:", user);
-    Alert.alert("You tapped the button!");
+  const handleLogin = async () => {
+    try {
+      const credentials = await signInWithEmailAndPassword(
+        auth,
+        user.Email,
+        user.Password
+      );
+
+      console.log(
+        " console.log(user.Email, user.Password);",
+        user.Email,
+        user.Password
+      );
+      console.log(credentials);
+      navigation.navigate("HomeStack");
+      return credentials.user;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handlePress = () => {
@@ -84,7 +102,7 @@ const LoginScreen = () => {
               </Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
-          <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
+          <TouchableOpacity style={styles.btnWrapper} onPress={handleLogin}>
             <Text style={styles.btn}>Увійти</Text>
           </TouchableOpacity>
           <Text style={{ textAlign: "center" }}>

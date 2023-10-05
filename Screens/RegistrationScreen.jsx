@@ -13,6 +13,13 @@ import {
   Button,
   Image,
 } from "react-native";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../config";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -22,14 +29,20 @@ const RegistrationScreen = () => {
     setUser({ ...user, [fieldName]: text });
   };
 
-  const handleRegister = () => {
-    console.log("User data:", user);
-    navigation.navigate("HomeStack");
+  const handleRegister = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, user.Email, user.Password);
+      navigation.navigate("HomeStack");
+      console.log(user.Email, user.Password);
+    } catch (error) {
+      console.log("e-->", error);
+      throw error;
+    }
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View>
+      <ScrollView>
         <Image
           resizeMode="cover"
           source={require("../assets/PhotoBG.png")}
@@ -50,11 +63,15 @@ const RegistrationScreen = () => {
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
             <TextInput
+              value={user.Name}
+              type="text"
               style={styles.input}
               placeholder="Логін"
               onChangeText={(text) => handleInputChange("Name", text)}
             />
             <TextInput
+              value={user.Email}
+              type="email"
               style={styles.input}
               placeholder="Адрес електронної пошти"
               keyboardType="email-address"
@@ -62,6 +79,7 @@ const RegistrationScreen = () => {
             />
 
             <TextInput
+              type="password"
               style={styles.input}
               value={user.Password}
               placeholder="Пароль"
@@ -82,7 +100,7 @@ const RegistrationScreen = () => {
             </Text>
           </Text>
         </View>
-      </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 };

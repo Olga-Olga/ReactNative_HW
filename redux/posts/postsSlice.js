@@ -1,25 +1,59 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllPosts, addPost, addComment, addLike } from "./postsOperations";
+import { addComentThunk, addPostThunk, getPostsThunk } from "./operetions";
 
-const postsSlice = createSlice({
+const initialState = {
+  posts: [],
+  isLoading: false,
+};
+export const postsSlice = createSlice({
   name: "posts",
-  initialState: [],
-
-  extraReducers: (builder) =>
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
     builder
-      .addCase(getAllPosts.fulfilled, (state, { payload }) => {
-        return payload;
+      .addCase(getPostsThunk.fulfilled, (state, { payload }) => {
+        state.posts = payload;
+        state.isLoading = false;
       })
-      .addCase(addPost.fulfilled, (state, { payload }) => {
-        state.push(payload);
+      .addCase(getPostsThunk.pending, (state, action) => {
+        state.isLoading = true;
       })
-      .addCase(addComment.fulfilled, (state, { payload }) => {
-        const postIndex = state.findIndex((post) => post.id === payload.id);
-        state[postIndex].comments.push(payload.comment);
+      .addCase(getPostsThunk.rejected, (state, action) => {
+        state.isLoading = false;
       })
-      .addCase(addLike.fulfilled, (state, { payload }) => {
-        const postIndex = state.findIndex((post) => post.id === payload);
-        state[postIndex].likes += 1;
-      }),
+      .addCase(addPostThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(addPostThunk.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(addPostThunk.rejected, (state, action) => {
+        state.isLoading = false;
+      })
+      .addCase(
+        addComentThunk.fulfilled,
+        (state, { payload: { postId, newComent } }) => {
+          const newPosts = state.posts.map((post) => {
+            if (post.id === postId) {
+              post.coments.push(newComent);
+              return post;
+            }
+            return post;
+          });
+          if (newPosts) {
+            state.posts = newPosts;
+          }
+          state.isLoading = false;
+        }
+      )
+      .addCase(addComentThunk.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(addComentThunk.rejected, (state, action) => {
+        state.isLoading = false;
+      });
+  },
 });
+
 export const postsReducer = postsSlice.reducer;
+export const { allPosts } = postsSlice.actions;

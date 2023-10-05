@@ -1,91 +1,59 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { db } from "../../config";
 import {
   addDoc,
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
   arrayUnion,
-  increment,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
 } from "firebase/firestore";
-import { db, storage } from "../../config";
 
-const getAllPosts = createAsyncThunk(
-  "posts/getAllPosts",
-  async (_, { rejectWithValue }) => {
+export const getPostsThunk = createAsyncThunk(
+  "auth/getPosts",
+  async (_, thunkAPI) => {
     try {
-      const posts = [];
-      const querySnapshot = await getDocs(collection(db, "posts"));
-      querySnapshot.forEach((doc) => {
-        const post = { ...doc.data(), id: doc.id };
-        posts.push(post);
-      });
-
-      return posts;
+      const snapshot = await getDocs(collection(db, "posts"));
+      const newPosts = [];
+      snapshot.forEach((doc) => newPosts.push({ id: doc.id, ...doc.data() }));
+      return newPosts;
     } catch (error) {
-      alert(error.message);
-      return rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
-
-const addPost = createAsyncThunk(
-  "posts/addPost",
-  async (postData, { rejectWithValue }) => {
+export const addPostThunk = createAsyncThunk(
+  "auth/addPost",
+  async (credentials, thunkAPI) => {
     try {
-      const response = await fetch(postData.image);
-      const blobImage = await response.blob();
-      const blobImageLocalPath = "post-image/" + blobImage._data.blobId;
-
-      await uploadBytes(ref(storage, blobImageLocalPath), blobImage);
-      const blobImageURL = await getDownloadURL(
-        ref(storage, blobImageLocalPath)
-      );
-
-      const newPost = {
-        ...postData,
-        image: blobImageURL,
+      await addDoc(collection(db, "posts"), credentials);
+      thunkAPI.dispatch(getPostsThunk());
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+export const addComentThunk = createAsyncThunk(
+  "auth/addComent",
+  async ({ postId, userId, message }, thunkAPI) => {
+    try {
+      const ref = doc(db, "posts", postId);
+      const dataTimeNow = new Date();
+      const typeTime = dataTimeNow.toUTCString();
+      const newComent = {
+        userId: userId,
+        body: message,
+        useAvatar: require("../../picture/user-avatar-default.png"),
+        dataTime: typeTime,
       };
-      const { id } = await addDoc(collection(db, "posts"), newPost);
 
-      return { id, ...newPost };
-    } catch (error) {
-      alert(error.message);
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-const addComment = createAsyncThunk(
-  "posts/addComment",
-  async ({ id, comment }, { rejectWithValue }) => {
-    try {
-      await updateDoc(doc(db, "posts", id), {
-        comments: arrayUnion({ ...comment }),
-      });
-      return { id, comment };
-    } catch (error) {
-      alert(error.message);
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-const addLike = createAsyncThunk(
-  "posts/addLike",
-  async (id, { rejectWithValue }) => {
-    try {
-      await updateDoc(doc(db, "posts", id), {
-        likes: increment(1),
+      await updateDoc(ref, {
+        coments: arrayUnion({ ...newComent }),
       });
 
-      return id;
+      return { postId, newComent };
     } catch (error) {
-      alert(error.message);
-      return rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
-
-export { getAllPosts, addPost, addComment, addLike };

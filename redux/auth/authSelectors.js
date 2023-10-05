@@ -1,5 +1,6 @@
-export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
+import { createSelector } from "@reduxjs/toolkit";
 
-export const selectUser = (state) => state.auth.user;
-
-export const selectUserID = (state) => state.auth.user.uid;
+export const userSelector = createSelector([(state) => state.user], (user) => {
+  console.log(user);
+  return user.user;
+});
