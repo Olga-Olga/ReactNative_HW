@@ -20,10 +20,30 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../config";
+import { useDispatch, useSelector } from "react-redux";
+import { registerThunk } from "../redux/auth/authOperations";
+import { userSelector } from "../redux/auth/authSelectors";
+import { useEffect } from "react";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState({ Name: "", Email: "", Password: "" });
+  const dispatch = useDispatch();
+
+  const { userId } = useSelector(userSelector);
+  useEffect(() => {
+    if (userId) {
+      navigation.navigate("HomeStack");
+    }
+  }, []);
+
+  const registeretions = () => {
+    dispatch(
+      registerThunk({ mail: user.Email, pass: user.Password, login: user.Name })
+    );
+    setUser({ Name: "", Email: "", Password: "" });
+    navigation.navigate("HomeStack");
+  };
 
   const handleInputChange = (fieldName, text) => {
     setUser({ ...user, [fieldName]: text });
@@ -87,7 +107,7 @@ const RegistrationScreen = () => {
               onChangeText={(text) => handleInputChange("Password", text)}
             />
           </KeyboardAvoidingView>
-          <TouchableOpacity style={styles.btnWrapper} onPress={handleRegister}>
+          <TouchableOpacity style={styles.btnWrapper} onPress={registeretions}>
             <Text style={styles.btn}>Зареєструватися</Text>
           </TouchableOpacity>
           <Text style={{ textAlign: "center" }}>

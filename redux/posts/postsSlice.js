@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComentThunk, addPostThunk, getPostsThunk } from "./operetions";
+import { addComentThunk, addPostThunk, getPostsThunk } from "./postsOperations";
 
 const initialState = {
   posts: [],

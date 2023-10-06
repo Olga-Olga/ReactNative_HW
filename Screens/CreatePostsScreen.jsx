@@ -11,29 +11,31 @@ import {
 import { SvgCamera } from "../assets/SvgCamera";
 import React, { useState, useEffect, useRef } from "react";
 import * as MediaLibrary from "expo-media-library";
-// import * as Location from "expo-location";
 import { Camera, RNCamera } from "expo-camera";
 import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
-
+// import { addPostThunk, getPostsThunk } from "../../redux/posts/postsOperations";
 import { db, storage } from "../config";
+import { useDispatch } from "react-redux";
+import { addPostThunk } from "../redux/posts/postsOperations";
+import { useNavigation } from "@react-navigation/native";
 
 const CreatePostsScreen = () => {
-  const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
   const cameraRef = useRef(null);
-  // const [cameraRef, setcameraRef] = useState(null);
-  // const [hasPermission, setHasPermission] = useState(null);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-  console.log("p", permission);
+  // const [permission, requestPermission] = Camera.useCameraPermissions();
   const [photoLink, setphotoLink] = useState("");
   const [location, setLocation] = useState(null);
+  const [hasPermission, setHasPermission] = Camera.useCameraPermissions();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   useEffect(() => {
-    requestPermission();
-    // (async () => {
-    //   const { status } = await Camera.requestCameraPermissionsAsync();
-    //   await MediaLibrary.requestPermissionsAsync();
-    //   setHasPermission(status === "granted");
-    // })();
+    setHasPermission();
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
     // (async () => {
     //   let { status } = await Location.requestForegroundPermissionsAsync();
     //   if (status !== "granted") {
@@ -50,10 +52,10 @@ const CreatePostsScreen = () => {
     // })();
   }, []);
 
-  if (!permission) {
+  if (!hasPermission) {
     return <View />;
   }
-  if (!permission.granted) {
+  if (!hasPermission.granted) {
     return <Text>No access to camera</Text>;
   }
 
@@ -62,15 +64,10 @@ const CreatePostsScreen = () => {
       const options = {
         skipProcessing: true,
       };
-
       try {
         const data = await cameraRef.current.takePictureAsync(options);
-        // console.log("Picture data:", data);
-        // console.log("Picture data:", data.uri);
         setphotoLink(data.uri);
-      } catch (error) {
-        // console.error("Error while taking a picture:", error);
-      }
+      } catch (error) {}
     }
   };
 
@@ -94,20 +91,20 @@ const CreatePostsScreen = () => {
     try {
       const img = await uploadImg();
       console.log(img);
-      // const newPost = {
-      //   location: location,
-      //   title: photoName,
-      //   locationName: photoLocetion,
-      //   imgRef: img || "",
-      //   coments: [],
-      // };
-      // dispatch(addPostThunk(newPost));
-      // navigation.navigate("PostsScreen");
+      const newPost = {
+        // location: location,
+        title: title,
+        // locationName: photoLocetion,
+        imgRef: img || "",
+        // coments: [],
+      };
+      dispatch(addPostThunk(newPost));
+      navigation.navigate("PostsScreen");
       // // ====================
       // setPhotoName("");
       // setPhotoLocetion("");
       // setIsFormValid(false);
-      // setHasPermission(null);
+      setHasPermission(null);
       // setCameraRef(null);
       // setPhoto("");
       // setLocation(null);
@@ -117,8 +114,8 @@ const CreatePostsScreen = () => {
     }
   };
 
-  const handleInputChange = (text) => {
-    setText(text);
+  const handleInputChange = (title) => {
+    setTitle(title);
   };
 
   return (
@@ -136,8 +133,8 @@ const CreatePostsScreen = () => {
         <TextInput
           style={styles.input}
           placeholder="Назва..." // Placeholder text
-          value={text}
-          onChangeText={(text) => handleInputChange(text)}
+          value={title}
+          onChangeText={(title) => handleInputChange(title)}
         />
 
         {/* <Text>Місцевість</Text> */}

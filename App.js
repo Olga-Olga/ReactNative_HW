@@ -20,7 +20,8 @@ import MapScreen from "./Screens/MapScreen";
 import CreatePostsScreen from "./Screens/CreatePostsScreen";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-import store from "../redux/store";
+import store from "./redux/store";
+// import store from "../redux/store";
 
 const MainStack = createStackNavigator(); // вказує на групу навігаторів
 const WebAPIKey = "AIzaSyB5hCUDV6KZCpc0CwdxR3MA0A1rRnazTUs";
@@ -34,7 +35,7 @@ export default function App() {
         <NavigationContainer>
           <MainStack.Navigator
             screenOptions={{ headerShown: false }}
-            initialRouteName={CreatePostsScreen}
+            // initialRouteName={CreatePostsScreen}
           >
             <MainStack.Screen
               name="Registration"

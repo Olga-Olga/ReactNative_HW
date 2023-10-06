@@ -23,11 +23,29 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../config";
+import { useDispatch, useSelector } from "react-redux";
+import { logInThunk } from "../redux/auth/authOperations";
+import { userSelector } from "../redux/auth/authSelectors";
+import { useEffect } from "react";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-
   const [user, setUser] = useState({ Email: "", Password: "" });
+
+  const dispatch = useDispatch();
+  const { userId } = useSelector(userSelector);
+
+  useEffect(() => {
+    if (userId) {
+      navigation.navigate("Home");
+    }
+  }, []);
+  const logIn = () => {
+    dispatch(logInThunk({ mail: user.Email, pass: user.Password }));
+    navigation.navigate("Home");
+
+    setUser({ Email: "", Password: "" });
+  };
 
   const handleInputChange = (fieldName, text) => {
     setUser({ ...user, [fieldName]: text });
