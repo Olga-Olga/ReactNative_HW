@@ -37,12 +37,12 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (userId) {
-      navigation.navigate("Home");
+      navigation.navigate("HomeStack");
     }
   }, []);
   const logIn = () => {
     dispatch(logInThunk({ mail: user.Email, pass: user.Password }));
-    navigation.navigate("Home");
+    navigation.navigate("HomeStack");
 
     setUser({ Email: "", Password: "" });
   };
