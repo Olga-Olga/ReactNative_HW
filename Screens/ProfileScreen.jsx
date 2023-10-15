@@ -1,95 +1,56 @@
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
 import React from "react";
-import { SVGicons } from "../assets/SVGicons";
-import { SvgXml } from "react-native-svg";
-// import LogOut from "../assets/LogOut";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-const ProfileScreen = (users) => {
-  const usersData = [
-    {
-      id: "1",
-      name: "Olga",
-      icon: "https://icons.iconarchive.com/icons/iconarchive/incognito-animals/512/Bear-Avatar-icon.png",
-      email: "olga@gmail.com",
-    },
-    // Добавьте других пользователей в массив
-  ];
-  const renderUserItem = ({ item }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => handleIconClick(item.name)}
-        style={styles.userItem}
-      >
-        <Image source={{ uri: item.icon }} style={styles.iconImage} />
-        <View style={styles.userInfo}>
-          <Text style={styles.emailText}>{item.email}</Text>
-          <Text style={styles.nameText}>{item.name}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+const ProfileScreen = () => {
+  const [location, setLocation] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={usersData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderUserItem}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      <MapView
+        style={styles.mapStyle}
+        region={{
+          ...location,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        showsUserLocation={true}
+      >
+        {location && (
+          <Marker title="I am here" coordinate={location} description="Hello" />
+        )}
+      </MapView>
     </View>
   );
 };
 
-export default ProfileScreen;
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Занимает всю доступную высоту экрана
-    justifyContent: "flex-end", // Выравнивание контейнера по нижней части экрана
-    alignItems: "center", // Выравнивание элементов по центру горизонтально
-  },
-  iconContainer: {
-    flexDirection: "row", // Расположение элементов в линию
-    alignItems: "center", // Выравнивание элементов по центру вертикально
-    padding: 16, // Добавляем отступы по бокам
-  },
-  icon: {
-    marginRight: 39,
-  },
-  iconWithGap: {
-    marginRight: 39,
-  },
-  separator: {
-    width: "100%",
-    height: 0.5,
-    backgroundColor: "grey", // Цвет линии
-  },
-  userItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-  },
-  iconImage: {
-    width: 24,
-    height: 24,
-    marginRight: 16,
-  },
-  userInfo: {
     flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  emailText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  nameText: {
-    fontSize: 16,
+  mapStyle: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
 });
+
+export default ProfileScreen;

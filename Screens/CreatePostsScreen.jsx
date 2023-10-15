@@ -197,15 +197,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   btn: {
-    flexDirection: "column",
-    alignItems: "center",
-    width: 343,
-    padding: 16,
-    paddingHorizontal: 32,
-    paddingVertical: 32,
-    marginVertical: 12,
-    borderRadius: 100, // Додано borderRadius
-    backgroundColor: "#F6F6F6", // Додано background
+    // flexDirection: "column",
+    // alignItems: "center",
+    // width: 343,
+    // padding: 16,
+    // paddingHorizontal: 32,
+    // paddingVertical: 32,
+    // marginVertical: 12,
+    // borderRadius: 100, // Додано borderRadius
+    backgroundColor: "orange", // Додано background
+    // display: "flex",
+    // width: 343,
+    // paddingVertical: 16,
+    // paddingHorizontal: 32,
+    // flexDirection: "column",
+    // alignItems: "center",
+    // gap: 12,
   },
   lable: {
     color: "#BDBDBD", // Change the color here
