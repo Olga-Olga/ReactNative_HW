@@ -9,6 +9,7 @@ import {
   TextInput,
 } from "react-native";
 import { SvgCamera } from "../assets/SvgCamera";
+import { SVGtrashBin } from "../assets/SVGtrashBin";
 import React, { useState, useEffect, useRef } from "react";
 import * as MediaLibrary from "expo-media-library";
 import { Camera, RNCamera } from "expo-camera";
@@ -123,7 +124,7 @@ const CreatePostsScreen = () => {
       <View>
         <Camera ref={cameraRef} style={{ flex: 1 }}>
           <View>
-            <Image souce={{ uri: photoLink }} />
+            <Image source={{ uri: photoLink }} />
           </View>
           <TouchableOpacity onPress={makePhoto} style={styles.container}>
             <SvgCamera />
@@ -136,11 +137,23 @@ const CreatePostsScreen = () => {
           value={title}
           onChangeText={(title) => handleInputChange(title)}
         />
-
-        {/* <Text>Місцевість</Text> */}
+        {/* <View style={createPostsStyles.inputWrapper}>
+          <Feather name="map-pin" size={24} color="#7365C3" />
+          <TextInput
+            placeholder="Місцевість..."
+            style={createPostsStyles.input}
+            value={mapLocation.isLoading ? "Location is updating . . ." : place}
+            onChangeText={(value) => setPlace(value)}
+            onBlur={() => place && getMapLocation()}
+            placeholderTextColor="#BDBDBD"
+          /></View> */}
       </View>
-      <Button onPress={publicPost} title="Опублікувати" style={styles.btn} />
-      <Text>TrachBin</Text>
+      <TouchableOpacity style={styles.btnWrapper} onPress={publicPost}>
+        <Text style={styles.btn}>Опублікувати</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.container}>
+        <SVGtrashBin />
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -148,6 +161,17 @@ const CreatePostsScreen = () => {
 export default CreatePostsScreen;
 
 const styles = StyleSheet.create({
+  btnWrapper: {
+    height: 50,
+    paddingLeft: 32,
+    paddingRight: 32,
+    paddingBottom: 16,
+    paddingTop: 16,
+    marginTop: 43,
+    marginBottom: 16,
+    borderRadius: 100,
+    backgroundColor: "#FF6C00",
+  },
   container: {
     width: 343,
     height: 240,
@@ -196,23 +220,26 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 16,
   },
-  btn: {
-    // flexDirection: "column",
-    // alignItems: "center",
-    // width: 343,
-    // padding: 16,
-    // paddingHorizontal: 32,
-    // paddingVertical: 32,
-    // marginVertical: 12,
-    // borderRadius: 100, // Додано borderRadius
+  btn2: {
+    width: 243,
+    padding: 16,
+    marginVertical: 12,
+    borderRadius: 100, // Додано borderRadius
     backgroundColor: "orange", // Додано background
-    // display: "flex",
-    // width: 343,
-    // paddingVertical: 16,
-    // paddingHorizontal: 32,
-    // flexDirection: "column",
-    // alignItems: "center",
-    // gap: 12,
+    display: "flex",
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 12,
+  },
+  btn: {
+    color: "#fff",
+    fontFamily: "Roboto",
+    fontSize: 15,
+    fontWeight: "400",
+    textAlign: "center",
+    height: 32,
   },
   lable: {
     color: "#BDBDBD", // Change the color here
